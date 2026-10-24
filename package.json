@@ -1,0 +1,21 @@
+{
+  "name": "sanad-windows",
+  "version": "1.0.0",
+  "description": "سند - مساعد الطالب",
+  "author": "Sanad",
+  "main": "electron/main.js",
+  "scripts": {
+    "postinstall": "node scripts/copy-vendor.js",
+    "start": "electron .",
+    "build:win": "electron-builder --win nsis portable"
+  },
+  "dependencies": { "sql.js": "1.8.0" },
+  "devDependencies": { "electron": "^31.0.0", "electron-builder": "^24.13.3" },
+  "build": {
+    "appId": "com.sanad.app",
+    "productName": "Sanad",
+    "files": ["electron/**", "www/**"],
+    "win": { "target": ["nsis", "portable"], "icon": "build/icon.png" },
+    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true }
+  }
+}
