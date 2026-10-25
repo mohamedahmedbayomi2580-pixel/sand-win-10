@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage } = require("electron");
+const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, shell } = require("electron");
 const path = require("path");
 app.setAppUserModelId("com.sanad.app");
 if (!app.requestSingleInstanceLock()) app.quit();
@@ -11,6 +11,11 @@ function createWindow() {
     webPreferences: { preload: path.join(__dirname, "preload.js"), contextIsolation: true, sandbox: false, backgroundThrottling: false }
   });
   win.loadFile(path.join(__dirname, "..", "www", "index.html"));
+  // روابط الإنترنت (مثل واتساب) تُفتح في المتصفح الافتراضي
+  win.webContents.setWindowOpenHandler(({ url }) => {
+    if (/^https?:/i.test(url)) { shell.openExternal(url); return { action: "deny" }; }
+    return { action: "allow" };
+  });
   // الإغلاق يخفي النافذة فقط ليستمر التطبيق في الخلفية وتصل التذكيرات
   win.on("close", (e) => { if (!quitting) { e.preventDefault(); win.hide(); } });
 }
